@@ -1,5 +1,5 @@
 # GCP Status Alerter
-This repository contains a Ruby script that consumes the [Google Cloud Status Dashboard](https://status.cloud.google.com/) JSON feed and posts corresponding alerts to a specified Slack channel as events occur.
+This repository contains a Ruby script that consumes the [Google Cloud Status Dashboard](https://status.cloud.google.com/) JSON feed and posts corresponding alerts to a specified Slack channel as events occur. A [Google Cloud Firestore](https://firebase.google.com/docs/firestore/) database is used to track a little state to ensure duplicate updates aren't posted.
 
 ## Installation
 * Ensure that [Ruby](https://www.ruby-lang.org/en/downloads/) is installed
