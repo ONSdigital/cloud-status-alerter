@@ -32,7 +32,7 @@ class GCPStatusAlerter
     latest = json.first
     update = Update.new(latest['number'],
                         latest['service_name'],
-                        DateTime.rfc3339(latest['most-recent-update']['when']).strftime(DATE_TIME_FORMAT),
+                        DateTime.rfc3339(latest['most-recent-update']['when']).to_s,
                         latest['most-recent-update']['text'],
                         latest['uri'])
 
@@ -75,7 +75,7 @@ class GCPStatusAlerter
   end
 
   def post_slack_message(update)
-    message_text = "*#{update.service}*\n#{update.timestamp}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"
+    message_text = "*#{update.service}*\n#{DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"
     @logger.info message_text
     @slack_client.chat_postMessage(channel: SLACK_CHANNEL, text: message_text, as_user: true)
   end
