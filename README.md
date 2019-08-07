@@ -11,15 +11,10 @@ This repository contains a Ruby script that consumes the [Google Cloud Status Da
 The environment variables below are required:
 
 ```
-GCP_STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
-SLACK_API_TOKEN
-```
-
-If running outside GCP, the two additional environment variables below are required:
-
-```
 FIRESTORE_CREDENTIALS # Path to the GCP service account JSON key
 FIRESTORE_PROJECT     # Name of the GCP project containing the Firestore project
+GCP_STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
+SLACK_API_TOKEN
 ```
 
 Run the script using `bundle exec ./gcp_status_alerter.rb`.

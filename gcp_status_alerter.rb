@@ -53,12 +53,12 @@ class GCPStatusAlerter
   def initialize_firestore_client
     firestore_project     = ENV['FIRESTORE_PROJECT']
     firestore_credentials = ENV['FIRESTORE_CREDENTIALS']
+    raise 'Missing FIRESTORE_PROJECT environment variable' unless firestore_project
+    raise 'Missing FIRESTORE_CREDENTIALS environment variable' unless firestore_credentials
 
-    if firestore_project && firestore_credentials
-      Google::Cloud::Firestore.configure do |config|
-        config.project_id  = firestore_project
-        config.credentials = firestore_credentials
-      end
+    Google::Cloud::Firestore.configure do |config|
+      config.project_id  = firestore_project
+      config.credentials = firestore_credentials
     end
 
     @firestore_client = Google::Cloud::Firestore.new
