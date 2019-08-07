@@ -16,6 +16,30 @@ class GCPStatusAlerter
   JSON_FEED_URL        = 'https://status.cloud.google.com/incidents.json'
   SLACK_CHANNEL        = ENV['GCP_STATUS_ALERTS_SLACK_CHANNEL']
   URI_ROOT             = 'https://status.cloud.google.com'
+  SERVICES_OF_INTEREST = ['Cloud Developer Tools',
+                          'Cloud Filestore',
+                          'Cloud Firestore',
+                          'Cloud Key Management Service',
+                          'Cloud Memorystore',
+                          'Cloud Security Command Center',
+                          'Cloud Spanner',
+                          'Google App Engine',
+                          'Google BigQuery',
+                          'Google Cloud Bigtable',
+                          'Google Cloud Console',
+                          'Google Cloud Datastore',
+                          'Google Cloud DNS',
+                          'Google Cloud Functions',
+                          'Google Cloud Networking',
+                          'Google Cloud Pub/Sub',
+                          'Google Cloud Scheduler',
+                          'Google Cloud SQL',
+                          'Google Cloud Storage',
+                          'Google Cloud Support',
+                          'Google Compute Engine',
+                          'Google Kubernetes Engine',
+                          'Google Stackdriver',
+                          'Identity and Access Management'].freeze
 
   Update = Struct.new(:number, :service, :timestamp, :text, :uri)
 
@@ -30,8 +54,11 @@ class GCPStatusAlerter
     raise "Unable to retrieve JSON feed from #{JSON_FEED_URL}" unless json
 
     latest = json.first
+    service_name = latest['service_name']
+    return unless SERVICES_OF_INTEREST.include?(service_name)
+
     update = Update.new(latest['number'],
-                        latest['service_name'],
+                        service_name,
                         DateTime.rfc3339(latest['most-recent-update']['when']).to_s,
                         latest['most-recent-update']['text'],
                         latest['uri'])
