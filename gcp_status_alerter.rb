@@ -103,7 +103,7 @@ class GCPStatusAlerter
 
   def post_slack_message(update)
     formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
-    message_text = "*#{update.service}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"
+    message_text = "*#{update.service}*\n#{formatted_timestamp}\n\n@here #{update.text}\n\n#{URI_ROOT}#{update.uri}"
     @logger.info message_text
     @slack_client.chat_postMessage(channel: SLACK_CHANNEL, text: message_text, as_user: true)
   end
