@@ -11,7 +11,7 @@ require 'google/cloud/firestore'
 # Class that consumes the Google Cloud Status Dashboard JSON feed and posts corresponding alerts to a specified
 # Slack channel.
 class GCPStatusAlerter
-  DATE_TIME_FORMAT     = '%A %e %b %Y %H:%M:%S UTC'
+  DATE_TIME_FORMAT     = '%A %d %b %Y %H:%M:%S UTC'
   FIRESTORE_COLLECTION = 'gcp-status-alerter-updates'
   JSON_FEED_URL        = 'https://status.cloud.google.com/incidents.json'
   SLACK_CHANNEL        = ENV['GCP_STATUS_ALERTS_SLACK_CHANNEL']
