@@ -22,8 +22,8 @@ Run the script using `bundle exec ./cloud_status_alerter.rb`.
 ## Providers
 * Add new providers to the `providers` directory
 * Provider classes must inherit from the `Provider` base class
-* The `initialize` method needs to set the `@icon` and `@name` for use within the Slack message
-* Implement a `latest_update` method that returns a populated `StatusFeedUpdate` struct declared within the `Provider` class. Note that the `metadata` field is optional
+* The provider class's `initialize` method must set the `@icon` and `@name` for use within the Slack message
+* The provider class must implement a `latest_update` method that returns a populated `StatusFeedUpdate` struct declared within the `Provider` class. Note that the `metadata` field is optional
 
 ## Copyright
 Copyright (C) 2019 Crown Copyright (Office for National Statistics)
