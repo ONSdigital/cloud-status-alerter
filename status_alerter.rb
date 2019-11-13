@@ -60,18 +60,20 @@ class GCPStatusAlerter
                         latest['most-recent-update']['text'],
                         latest['uri'])
 
-    post_slack_message(update) unless in_firestore?(update)
-    save_to_firestore(update)
+    formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
+    text = "*#{update.service}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"    
+    post_slack_message(text, 'gcp', 'GCP - Cloud Status Bot') unless in_firestore?(FIRESTORE_COLLECTION, update.number, update.timestamp, update.text)
+    save_to_firestore(FIRESTORE_COLLECTION, update.number, update.timestamp, update.text)
   end
 
   private
 
-  def in_firestore?(update)
-    doc = @firestore_client.doc "#{FIRESTORE_COLLECTION}/#{update.number}"
+  def in_firestore?(collection, key, timestamp, text)
+    doc = @firestore_client.doc "#{collection}/#{key}"
     snapshot = doc.get
     return false if snapshot.data.nil?
 
-    snapshot[:timestamp].eql?(update.timestamp) && snapshot[:text].eql?(update.text)
+    snapshot[:timestamp].eql?(timestamp) && snapshot[:text].eql?(text)
   end
 
   def initialize_firestore_client
@@ -88,29 +90,26 @@ class GCPStatusAlerter
     @firestore_client = Google::Cloud::Firestore.new
   end
 
-  def post_slack_message(update)
-    formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
-    message_text = "*#{update.service}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"
-    attachments = []
+  def post_slack_message(text, icon, username)
     payload = {
       'channel': ENV['STATUS_ALERTS_SLACK_CHANNEL'],
-      'icon_emoji': ':gcp:',
-      'username': 'Cloud Status Bot',
-      'text': message_text,
-      'attachments': attachments
+      'icon_emoji': ":#{icon}:",
+      'username': username,
+      'text': text,
+      'attachments': []
     }.to_json.encode('UTF-8')
     headers = { 'Content-Type': 'application/json' }
     begin
       RestClient.post(ENV['SLACK_WEBHOOK'].chomp, payload, headers)
-      @logger.info message_text
+      @logger.info text
     rescue RestClient::ExceptionWithResponse => e
       @logger.error("Error posting to Slack: HTTP #{e.response.code} #{e.response}")
     end
   end
 
-  def save_to_firestore(update)
-    doc = @firestore_client.doc "#{FIRESTORE_COLLECTION}/#{update.number}"
-    doc.set(timestamp: update.timestamp, text: update.text)
+  def save_to_firestore(collection, key, timestamp, text)
+    doc = @firestore_client.doc "#{FIRESTORE_COLLECTION}/#{key}"
+    doc.set(timestamp: timestamp, text: text)
   end
 end
 
