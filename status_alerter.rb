@@ -93,7 +93,7 @@ class GCPStatusAlerter
     message_text = "*#{update.service}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"
     attachments = []
     payload = {
-      'channel': ENV['GCP_STATUS_ALERTS_SLACK_CHANNEL'],
+      'channel': ENV['STATUS_ALERTS_SLACK_CHANNEL'],
       'icon_emoji': ':gcp:',
       'username': 'Cloud Status Bot',
       'text': message_text,
