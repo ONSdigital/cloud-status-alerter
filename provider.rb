@@ -3,7 +3,7 @@
 require 'date'
 require 'rest-client'
 
-# Base class that defines a common interface for all providers to implement.
+# Base class that defines a common interface for all providers.
 class Provider
   attr_reader :icon, :name
 
