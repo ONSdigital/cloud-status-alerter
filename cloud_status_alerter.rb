@@ -53,7 +53,7 @@ class CloudStatusAlerter
   end
 
   def in_firestore?(provider, update)
-    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}#{provider.name}/#{update.id}")
+    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}-#{provider.name}/#{update.id}")
     snapshot = doc.get
     return false if snapshot.data.nil?
 
@@ -94,7 +94,7 @@ class CloudStatusAlerter
   end
 
   def save_to_firestore(provider, update)
-    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}#{provider.name}/#{update.id}")
+    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}-#{provider.name}/#{update.id}")
     doc.set(timestamp: update.timestamp, text: update.text)
   end
 end
