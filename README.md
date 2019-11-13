@@ -13,11 +13,11 @@ The environment variables below are required:
 ```
 FIRESTORE_CREDENTIALS # Path to the GCP service account JSON key
 FIRESTORE_PROJECT     # Name of the GCP project containing the Firestore project
-GCP_STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
-SLACK_API_TOKEN
+SLACK_WEBHOOK
+STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
 ```
 
-Run the script using `bundle exec ./gcp_status_alerter.rb`.
+Run the script using `bundle exec ./cloud_status_alerter.rb`.
 
 ## Copyright
 Copyright (C) 2019 Crown Copyright (Office for National Statistics)
