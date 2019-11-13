@@ -5,16 +5,14 @@ require 'date'
 require 'json'
 require 'logger'
 require 'rest-client'
-require 'slack-ruby-client'
 require 'google/cloud/firestore'
 
 # Class that consumes the Google Cloud Status Dashboard JSON feed and posts corresponding alerts to a specified
 # Slack channel.
 class GCPStatusAlerter
   DATE_TIME_FORMAT     = '%A %d %b %Y %H:%M:%S UTC'
-  FIRESTORE_COLLECTION = 'gcp-status-alerter-updates'
+  FIRESTORE_COLLECTION = 'gcp-status-alerter-updates-test'
   JSON_FEED_URL        = 'https://status.cloud.google.com/incidents.json'
-  SLACK_CHANNEL        = ENV['GCP_STATUS_ALERTS_SLACK_CHANNEL']
   URI_ROOT             = 'https://status.cloud.google.com'
   SERVICES_OF_INTEREST = ['Cloud Developer Tools',
                           'Cloud Filestore',
@@ -46,7 +44,6 @@ class GCPStatusAlerter
   def initialize
     @logger = Logger.new($stdout)
     initialize_firestore_client
-    initialize_slack_client
   end
 
   def run
@@ -91,21 +88,24 @@ class GCPStatusAlerter
     @firestore_client = Google::Cloud::Firestore.new
   end
 
-  def initialize_slack_client
-    Slack.configure do |config|
-      config.token = ENV['SLACK_API_TOKEN']
-      raise 'Missing SLACK_API_TOKEN environment variable' unless config.token
-    end
-
-    @slack_client = Slack::Web::Client.new
-    @slack_client.auth_test
-  end
-
   def post_slack_message(update)
     formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
     message_text = "*#{update.service}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"
-    @logger.info message_text
-    @slack_client.chat_postMessage(channel: SLACK_CHANNEL, text: message_text, as_user: true)
+    attachments = []
+    payload = {
+      'channel': ENV['GCP_STATUS_ALERTS_SLACK_CHANNEL'],
+      'icon_emoji': ':gcp:',
+      'username': 'Cloud Status Bot',
+      'text': message_text,
+      'attachments': attachments
+    }.to_json.encode('UTF-8')
+    headers = { 'Content-Type': 'application/json' }
+    begin
+      RestClient.post(ENV['SLACK_WEBHOOK'].chomp, payload, headers)
+      @logger.info message_text
+    rescue RestClient::ExceptionWithResponse => e
+      @logger.error("Error posting to Slack: HTTP #{e.response.code} #{e.response}")
+    end
   end
 
   def save_to_firestore(update)
