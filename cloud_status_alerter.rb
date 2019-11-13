@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'date'
 require 'json'
 require 'logger'
 require 'rest-client'
@@ -11,69 +10,54 @@ require 'google/cloud/firestore'
 # Slack channel.
 class CloudStatusAlerter
   DATE_TIME_FORMAT     = '%A %d %b %Y %H:%M:%S UTC'
-  FIRESTORE_COLLECTION = 'gcp-status-alerter-updates-test'
-  JSON_FEED_URL        = 'https://status.cloud.google.com/incidents.json'
-  URI_ROOT             = 'https://status.cloud.google.com'
-  SERVICES_OF_INTEREST = ['Cloud Developer Tools',
-                          'Cloud Filestore',
-                          'Cloud Firestore',
-                          'Cloud Key Management Service',
-                          'Cloud Memorystore',
-                          'Cloud Security Command Center',
-                          'Cloud Spanner',
-                          'Google App Engine',
-                          'Google BigQuery',
-                          'Google Cloud Bigtable',
-                          'Google Cloud Console',
-                          'Google Cloud Datastore',
-                          'Google Cloud DNS',
-                          'Google Cloud Functions',
-                          'Google Cloud Networking',
-                          'Google Cloud Pub/Sub',
-                          'Google Cloud Scheduler',
-                          'Google Cloud SQL',
-                          'Google Cloud Storage',
-                          'Google Cloud Support',
-                          'Google Compute Engine',
-                          'Google Kubernetes Engine',
-                          'Google Stackdriver',
-                          'Identity and Access Management'].freeze
+  FIRESTORE_COLLECTION = 'cloud-status-alerter-updates-test'
+  THREE_SECONDS        = 3
 
-  Update = Struct.new(:number, :service, :timestamp, :text, :uri)
+  def self.providers
+    @providers ||= []
+  end
+
+  def self.register_provider(instance)
+    providers << instance
+  end
 
   def initialize
     @logger = Logger.new($stdout)
     initialize_firestore_client
+    load_providers
+  end
+
+  def load_providers
+    Dir['./providers/*.rb'].each do |file|
+      require_relative file
+      klass = self.class.const_get(File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).first).to_s
+      self.class.register_provider(Object.const_get(klass).new)
+    end
   end
 
   def run
-    json = JSON.parse(RestClient.get(JSON_FEED_URL))
-    raise "Unable to retrieve JSON feed from #{JSON_FEED_URL}" unless json
-
-    latest = json.first
-    service_name = latest['service_name']
-    return unless SERVICES_OF_INTEREST.include?(service_name)
-
-    update = Update.new(latest['number'],
-                        service_name,
-                        DateTime.rfc3339(latest['most-recent-update']['when']).to_s,
-                        latest['most-recent-update']['text'],
-                        latest['uri'])
-
-    formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
-    text = "*#{update.service}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{URI_ROOT}#{update.uri}"    
-    post_slack_message(text, 'gcp', 'GCP - Cloud Status Bot') unless in_firestore?(FIRESTORE_COLLECTION, update.number, update.timestamp, update.text)
-    save_to_firestore(FIRESTORE_COLLECTION, update.number, update.timestamp, update.text)
+    self.class.providers.each do |provider|
+      update = provider.latest_update
+      post_slack_message(provider.icon, provider.name, update) unless in_firestore?(provider, update)
+      save_to_firestore(provider, update)
+    end
   end
 
   private
 
-  def in_firestore?(collection, key, timestamp, text)
-    doc = @firestore_client.doc "#{collection}/#{key}"
+  def format_text(update)
+    formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
+    return "#{formatted_timestamp}\n\n#{update.text}\n\n#{update.uri}" if update.metadata.nil?
+
+    "*#{update.metadata}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{update.uri}"
+  end
+
+  def in_firestore?(provider, update)
+    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}#{provider.name}/#{update.id}")
     snapshot = doc.get
     return false if snapshot.data.nil?
 
-    snapshot[:timestamp].eql?(timestamp) && snapshot[:text].eql?(text)
+    snapshot[:timestamp].eql?(update.timestamp) && snapshot[:text].eql?(update.text)
   end
 
   def initialize_firestore_client
@@ -90,16 +74,18 @@ class CloudStatusAlerter
     @firestore_client = Google::Cloud::Firestore.new
   end
 
-  def post_slack_message(text, icon, username)
+  def post_slack_message(icon, username, update)
+    text = format_text(update)
     payload = {
       'channel': ENV['STATUS_ALERTS_SLACK_CHANNEL'],
       'icon_emoji': ":#{icon}:",
-      'username': username,
+      'username': "#{username} - Cloud Status Bot",
       'text': text,
       'attachments': []
     }.to_json.encode('UTF-8')
     headers = { 'Content-Type': 'application/json' }
     begin
+      sleep THREE_SECONDS # Avoid Slack's rate limits.
       RestClient.post(ENV['SLACK_WEBHOOK'].chomp, payload, headers)
       @logger.info text
     rescue RestClient::ExceptionWithResponse => e
@@ -107,9 +93,9 @@ class CloudStatusAlerter
     end
   end
 
-  def save_to_firestore(collection, key, timestamp, text)
-    doc = @firestore_client.doc "#{FIRESTORE_COLLECTION}/#{key}"
-    doc.set(timestamp: timestamp, text: text)
+  def save_to_firestore(provider, update)
+    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}#{provider.name}/#{update.id}")
+    doc.set(timestamp: update.timestamp, text: update.text)
   end
 end
 
