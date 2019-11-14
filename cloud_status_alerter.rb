@@ -6,8 +6,7 @@ require 'logger'
 require 'rest-client'
 require 'google/cloud/firestore'
 
-# Class that consumes the Google Cloud Status Dashboard JSON feed and posts corresponding alerts to a specified
-# Slack channel.
+# Class that ask providers for their status updates and posts corresponding alerts to a specified Slack channel.
 class CloudStatusAlerter
   DATE_TIME_FORMAT     = '%A %d %b %Y %H:%M:%S UTC'
   FIRESTORE_COLLECTION = 'cloud-status-alerter-updates-test'
