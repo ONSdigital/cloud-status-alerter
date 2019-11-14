@@ -45,10 +45,10 @@ class Gcp < Provider
     service_name = latest['service_name']
     return unless SERVICES_OF_INTEREST.include?(service_name)
 
-    StatusFeedUpdate.new(latest['number'],
-                         DateTime.rfc3339(latest['most-recent-update']['when']).to_s,
-                         service_name,
-                         latest['most-recent-update']['text'],
-                         "#{URI_ROOT}#{latest['uri']}")
+    StatusFeedUpdate.new(id: latest['number'],
+                         timestamp: DateTime.rfc3339(latest['most-recent-update']['when']).to_s,
+                         metadata: service_name,
+                         text: latest['most-recent-update']['text'],
+                         uri: "#{URI_ROOT}#{latest['uri']}")
   end
 end

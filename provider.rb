@@ -7,5 +7,5 @@ require 'rest-client'
 class Provider
   attr_reader :icon, :name
 
-  StatusFeedUpdate = Struct.new(:id, :timestamp, :metadata, :text, :uri)
+  StatusFeedUpdate = Struct.new(:id, :timestamp, :metadata, :text, :uri, keyword_init: true)
 end
