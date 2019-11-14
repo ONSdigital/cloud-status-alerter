@@ -21,7 +21,7 @@ class Travis < Provider
     latest = feed.entries.first
     StatusFeedUpdate.new(id: latest.entry_id.partition('/').last,
                          timestamp: latest.published.to_datetime.to_s,
-                         metadata: nil,
+                         metadata: latest.title,
                          text: Sanitize.fragment(latest.content, whitespace_elements: WHITESPACE_ELEMENTS),
                          uri: latest.url)
   end
