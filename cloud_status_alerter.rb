@@ -9,7 +9,7 @@ require 'google/cloud/firestore'
 # Class that asks providers for their status updates and posts corresponding alerts to a specified Slack channel.
 class CloudStatusAlerter
   DATE_TIME_FORMAT     = '%A %d %b %Y %H:%M:%S UTC'
-  FIRESTORE_COLLECTION = 'cloud-status-alerter-updates-test'
+  FIRESTORE_COLLECTION = 'cloud-status-alerter-updates'
   THREE_SECONDS        = 3
 
   def self.providers
