@@ -2,7 +2,8 @@
 
 source 'https://rubygems.org'
 
+gem 'feedjira'
 gem 'google-cloud-firestore'
 gem 'json'
 gem 'rest-client'
-gem 'slack-ruby-client'
+gem 'sanitize'
