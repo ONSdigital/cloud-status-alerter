@@ -45,6 +45,10 @@ class CloudStatusAlerter
 
   private
 
+  def firestore_key(provider, update)
+    "#{FIRESTORE_COLLECTION}-#{provider.name.gsub(' ', '-').downcase}/#{update.id}"
+  end
+
   def format_text(update)
     formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
     return "_#{formatted_timestamp}_\n\n#{update.text}\n\n#{update.uri}" if update.metadata.nil?
@@ -53,7 +57,7 @@ class CloudStatusAlerter
   end
 
   def in_firestore?(provider, update)
-    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}-#{provider.name}/#{update.id}")
+    doc = @firestore_client.doc(firestore_key(provider, update))
     snapshot = doc.get
     return false if snapshot.data.nil?
 
@@ -94,7 +98,7 @@ class CloudStatusAlerter
   end
 
   def save_to_firestore(provider, update)
-    doc = @firestore_client.doc("#{FIRESTORE_COLLECTION}-#{provider.name}/#{update.id}")
+    doc = @firestore_client.doc(firestore_key(provider, update))
     doc.set(timestamp: update.timestamp, text: update.text)
   end
 end
