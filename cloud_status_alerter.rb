@@ -49,7 +49,7 @@ class CloudStatusAlerter
     formatted_timestamp = DateTime.parse(update.timestamp).strftime(DATE_TIME_FORMAT)
     return "_#{formatted_timestamp}_\n\n#{update.text}\n\n#{update.uri}" if update.metadata.nil?
 
-    "*#{update.metadata}*\n#{formatted_timestamp}\n\n#{update.text}\n\n#{update.uri}"
+    "*#{update.metadata}*\n_#{formatted_timestamp}_\n\n#{update.text}\n\n#{update.uri}"
   end
 
   def in_firestore?(provider, update)
