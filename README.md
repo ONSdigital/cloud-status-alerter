@@ -11,19 +11,29 @@ This repository contains a Ruby script that consumes the various service/vender 
 The environment variables below are required:
 
 ```
-FIRESTORE_CREDENTIALS # Path to the GCP service account JSON key
-FIRESTORE_PROJECT     # Name of the GCP project containing the Firestore project
-SLACK_WEBHOOK
+FIRESTORE_CREDENTIALS       # Path to the GCP service account JSON key
+FIRESTORE_PROJECT           # Name of the GCP project containing the Firestore project
+SLACK_WEBHOOK               # Used for accessing the Slack Incoming Webhooks API
 STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
 ```
 
 Run the script using `bundle exec ./cloud_status_alerter.rb`.
 
 ## Providers
-* Add new providers to the `providers` directory
+Updates from a status feed source are implemented by providers, which are simply classes within the `providers` directory that conform to these rules:
+
 * Provider classes must inherit from the `Provider` base class
-* The provider class's `initialize` method must set the `@icon` and `@name` for use within the Slack message
-* The provider class must implement a `latest_update` method that returns a populated `StatusFeedUpdate` struct declared within the `Provider` class. Note that the `metadata` field is optional
+* Provider class names must have an initial capital and then be all lower-case e.g. `Github`
+* The provider class's `initialize` method must set the `@icon` and `@name` for use within the Slack message (the icon should be the name of a Slack emoji minus the surrounding colons)
+* The provider class must implement a `latest_update` method that returns a populated `StatusFeedUpdate` struct. This struct contains the following fields:
+
+| Field     | Purpose                                                                                |
+| ----------| -------------------------------------------------------------------------------------- |
+| id        | Unique ID for the update. Not displayed, used as a document key in Firestore           |
+| timestamp | Timestamp of the update                                                                |
+| metadata  | Optional additional information about the update e.g. the name of the service affected |
+| text      | Status update text                                                                     |
+| uri       | URI for viewing this individual status update online                                   |
 
 ## Copyright
 Copyright (C) 2019 Crown Copyright (Office for National Statistics)
