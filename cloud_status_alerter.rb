@@ -29,7 +29,7 @@ class CloudStatusAlerter
   def load_providers
     Dir['./providers/*.rb'].each do |file|
       require_relative file
-      klass = self.class.const_get(File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).first).to_s
+      klass = self.class.const_get(File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join
       self.class.register_provider(Object.const_get(klass).new)
     end
   end
