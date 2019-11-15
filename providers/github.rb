@@ -16,6 +16,7 @@ class Github < Provider
   def latest_update
     feed = Feedjira.parse(RestClient.get(STATUS_FEED_URL))
     raise "Unable to retrieve Atom feed from #{STATUS_FEED_URL}" unless feed
+    return nil if feed.entries.empty?
 
     latest = feed.entries.first
     StatusFeedUpdate.new(id: latest.entry_id.partition('/').last,
