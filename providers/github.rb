@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'feedjira'
-require 'json'
 require 'sanitize'
 require_relative '../provider'
 
