@@ -29,7 +29,7 @@ class CloudStatusAlerter
   def load_providers
     Dir['./providers/*.rb'].each do |file|
       require_relative file
-      klass = self.class.const_get(File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).first).to_s
+      klass = self.class.const_get(File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join).to_s
       self.class.register_provider(Object.const_get(klass).new)
     end
   end
@@ -37,6 +37,8 @@ class CloudStatusAlerter
   def run
     self.class.providers.each do |provider|
       update = provider.latest_update
+      next if update.nil?
+
       post_slack_message(provider.icon, provider.name, update) unless in_firestore?(provider, update)
       save_to_firestore(provider, update)
     end
