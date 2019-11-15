@@ -45,7 +45,7 @@ class CloudStatusAlerter
   private
 
   def firestore_key(provider, update)
-    "#{FIRESTORE_COLLECTION}-#{provider.name.gsub(' ', '-').downcase}/#{update.id}"
+    "#{FIRESTORE_COLLECTION}-#{provider.name.gsub(' ', '-').gsub(/\(|\)/, '').downcase}/#{update.id}"
   end
 
   def format_text(update)
