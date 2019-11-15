@@ -37,6 +37,8 @@ class CloudStatusAlerter
   def run
     self.class.providers.each do |provider|
       update = provider.latest_update
+      next if update.nil?
+
       post_slack_message(provider.icon, provider.name, update) unless in_firestore?(provider, update)
       save_to_firestore(provider, update)
     end
