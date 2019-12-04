@@ -36,4 +36,4 @@ Updates from a status feed source are implemented by providers, which are simply
 | uri       | URI for viewing this individual status update online                                   |
 
 ## Copyright
-Copyright (C) 2019 Crown Copyright (Office for National Statistics).
+Copyright (C) 2019 Crown Copyright (Office for National Statistics)
