@@ -62,7 +62,7 @@ GEM
     multi_json (1.14.1)
     multipart-post (2.1.1)
     netrc (0.11.0)
-    nokogiri (1.10.5)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.1)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -96,6 +96,7 @@ DEPENDENCIES
   feedjira
   google-cloud-firestore
   json
+  nokogiri (>= 1.10.8)
   rest-client
   sanitize
 
