@@ -16,7 +16,7 @@ SLACK_WEBHOOK               # Used for accessing the Slack Incoming Webhooks API
 STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
 ```
 
-The environment variables below are optional:
+The environment variable below is optional:
 
 ```
 FIRESTORE_CREDENTIALS       # Path to the GCP service account JSON key (used when running locally)
