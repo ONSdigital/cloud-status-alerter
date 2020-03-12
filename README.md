@@ -11,10 +11,15 @@ This repository contains a Ruby script that consumes the various service/vender 
 The environment variables below are required:
 
 ```
-FIRESTORE_CREDENTIALS       # Path to the GCP service account JSON key
 FIRESTORE_PROJECT           # Name of the GCP project containing the Firestore project
 SLACK_WEBHOOK               # Used for accessing the Slack Incoming Webhooks API
 STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
+```
+
+The environment variables below are optional:
+
+```
+FIRESTORE_CREDENTIALS       # Path to the GCP service account JSON key (used when running locally)
 ```
 
 Run the script using `bundle exec ./cloud_status_alerter.rb`.
@@ -36,4 +41,4 @@ Updates from a status feed source are implemented by providers, which are simply
 | uri       | URI for viewing this individual status update online                                   |
 
 ## Copyright
-Copyright (C) 2019 Crown Copyright (Office for National Statistics)
+Copyright (C) 2019&ndash;2020 Crown Copyright (Office for National Statistics)
