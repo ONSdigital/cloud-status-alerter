@@ -69,7 +69,7 @@ class CloudStatusAlerter
     firestore_project     = ENV['FIRESTORE_PROJECT']
     firestore_credentials = ENV['FIRESTORE_CREDENTIALS']
     raise 'Missing FIRESTORE_PROJECT environment variable' unless firestore_project
-    
+
     Google::Cloud::Firestore.configure do |config|
       config.project_id  = firestore_project
       config.credentials = firestore_credentials if firestore_credentials
