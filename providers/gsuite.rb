@@ -30,7 +30,8 @@ class Gsuite < Provider
     service_name = latest['title']
     return unless SERVICES_OF_INTEREST.include?(service_name)
 
-    StatusFeedUpdate.new(id: SecureRandom.random_number(10**10).to_s.rjust(10, '0'), # Have to generate an ID because the RSS feed doesn't include unique ones.
+    # Have to generate an ID because the RSS feed doesn't include unique ones.
+    StatusFeedUpdate.new(id: SecureRandom.random_number(10**10).to_s.rjust(10, '0'),
                          timestamp: latest.pubDate.to_datetime.to_s,
                          metadata: latest.title,
                          text: Sanitize.fragment(latest.description, whitespace_elements: WHITESPACE_ELEMENTS),
