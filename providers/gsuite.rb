@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest/sha1'
 require 'feedjira'
 require 'sanitize'
 require 'securerandom'
@@ -31,7 +32,7 @@ class Gsuite < Provider
     return unless SERVICES_OF_INTEREST.include?(service_name)
 
     # Have to generate an ID because the RSS feed doesn't include unique ones.
-    StatusFeedUpdate.new(id: SecureRandom.random_number(10**10).to_s.rjust(10, '0'),
+    StatusFeedUpdate.new(id: Digest::SHA1.hexdigest(latest.content),
                          timestamp: latest.pubDate.to_datetime.to_s,
                          metadata: latest.title,
                          text: Sanitize.fragment(latest.description, whitespace_elements: WHITESPACE_ELEMENTS),
