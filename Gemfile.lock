@@ -39,7 +39,7 @@ GEM
       grpc (~> 1.27)
     googleapis-common-protos-types (1.0.5)
       google-protobuf (~> 3.11)
-    googleauth (0.13.1)
+    googleauth (0.12.0)
       faraday (>= 0.17.3, < 2.0)
       jwt (>= 1.4, < 3.0)
       memoist (~> 0.16)
@@ -97,10 +97,11 @@ PLATFORMS
 DEPENDENCIES
   feedjira
   google-cloud-firestore
+  googleauth (= 0.12.0)
   json
   nokogiri (>= 1.10.8)
   rest-client
   sanitize
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
