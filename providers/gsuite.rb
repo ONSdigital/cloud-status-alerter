@@ -32,7 +32,7 @@ class Gsuite < Provider
     return unless SERVICES_OF_INTEREST.include?(service_name)
 
     # Have to generate an ID because the RSS feed doesn't include unique ones.
-    StatusFeedUpdate.new(id: Digest::SHA1.hexdigest(latest.content),
+    StatusFeedUpdate.new(id: Digest::SHA1.hexdigest(latest.summary),
                          timestamp: latest.pubDate.to_datetime.to_s,
                          metadata: latest.title,
                          text: Sanitize.fragment(latest.description, whitespace_elements: WHITESPACE_ELEMENTS),
