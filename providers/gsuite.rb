@@ -33,9 +33,9 @@ class Gsuite < Provider
 
     # Have to generate an ID because the RSS feed doesn't include unique ones.
     StatusFeedUpdate.new(id: Digest::SHA1.hexdigest(latest.summary),
-                         timestamp: latest.pubDate.to_datetime.to_s,
+                         timestamp: latest.published.to_datetime.to_s,
                          metadata: latest.title,
-                         text: Sanitize.fragment(latest.description, whitespace_elements: WHITESPACE_ELEMENTS),
-                         uri: latest.link)
+                         text: Sanitize.fragment(latest.summary, whitespace_elements: WHITESPACE_ELEMENTS),
+                         uri: 'https://www.google.co.uk/appsstatus')
   end
 end
