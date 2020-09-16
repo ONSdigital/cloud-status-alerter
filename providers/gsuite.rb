@@ -35,7 +35,8 @@ class Gsuite < Provider
     StatusFeedUpdate.new(id: Digest::SHA1.hexdigest(latest.summary),
                          timestamp: latest.published.to_datetime.to_s,
                          metadata: latest.title,
-                         text: Sanitize.fragment(latest.summary, whitespace_elements: WHITESPACE_ELEMENTS),
+                         text: Sanitize.fragment(latest.summary.gsub('&nbsp;', ''),
+                                                 whitespace_elements: WHITESPACE_ELEMENTS),
                          uri: 'https://www.google.co.uk/appsstatus')
   end
 end
