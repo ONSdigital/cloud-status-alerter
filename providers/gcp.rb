@@ -21,6 +21,7 @@ class Gcp < Provider
                           'Google Cloud Datastore',
                           'Google Cloud DNS',
                           'Google Cloud Functions',
+                          'Google Cloud Infrastructure Components',
                           'Google Cloud Networking',
                           'Google Cloud Pub/Sub',
                           'Google Cloud Scheduler',
