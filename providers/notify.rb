@@ -5,7 +5,7 @@ require 'sanitize'
 require_relative '../provider'
 
 # Provider for GOV.UK Notify.
-class Govuknotify < Provider
+class Notify < Provider
   STATUS_FEED_URL = 'https://status.notifications.service.gov.uk/history.atom'
 
   def initialize
