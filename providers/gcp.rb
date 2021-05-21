@@ -6,7 +6,7 @@ require_relative '../provider'
 # Provider for Google Cloud Platform.
 class Gcp < Provider
   STATUS_FEED_URL      = 'https://status.cloud.google.com/incidents.json'
-  URI_ROOT             = 'https://status.cloud.google.com'
+  URI_ROOT             = 'https://status.cloud.google.com/'
   SERVICES_OF_INTEREST = ['Cloud Developer Tools',
                           'Cloud Filestore',
                           'Cloud Firestore',
