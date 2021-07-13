@@ -87,10 +87,10 @@ class CloudStatusAlerter
       'text': text,
       'attachments': []
     }.to_json.encode('UTF-8')
-    headers = { 'Content-Type': 'application/json' }
+    headers = { 'Content-Type': 'application/json', 'Authorization': ENV['SLACK_BOT_TOKEN'].chomp }
     begin
       sleep THREE_SECONDS # Avoid Slack's rate limits.
-      RestClient.post(ENV['SLACK_WEBHOOK'].chomp, payload, headers)
+      RestClient.post('https://slack.com/api/chat.postMessage', payload, headers)
       @logger.info text
     rescue RestClient::ExceptionWithResponse => e
       @logger.error("Error posting to Slack: HTTP #{e.response.code} #{e.response}")
