@@ -12,7 +12,7 @@ The environment variables below are required:
 
 ```
 FIRESTORE_PROJECT           # Name of the GCP project containing the Firestore project
-SLACK_WEBHOOK               # Used for accessing the Slack Incoming Webhooks API
+SLACK_BOT_TOKEN             # Used for accessing the Slack API
 STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
 ```
 
