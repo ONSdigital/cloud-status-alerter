@@ -87,7 +87,7 @@ class CloudStatusAlerter
       'text': text,
       'attachments': []
     }.to_json.encode('UTF-8')
-    headers = { 'Content-Type': 'application/json', 'Authorization': ENV['SLACK_BOT_TOKEN'].chomp }
+    headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' ENV['SLACK_BOT_TOKEN'].chomp }
     begin
       sleep THREE_SECONDS # Avoid Slack's rate limits.
       RestClient.post('https://slack.com/api/chat.postMessage', payload, headers)
