@@ -99,7 +99,7 @@ class CloudStatusAlerter
 
   def save_to_firestore(provider, update)
     doc = @firestore_client.doc(firestore_key(provider, update))
-    doc.set(timestamp: update.timestamp, text: update.text)
+    doc.set({ timestamp: update.timestamp, text: update.text })
   end
 end
 
