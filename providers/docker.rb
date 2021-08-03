@@ -9,6 +9,7 @@ class Docker < Provider
   STATUS_FEED_URL = 'https://status.docker.com/pages/533c6539221ae15e3f000031/rss'
 
   def initialize
+    super
     @icon = 'docker'
     @name = 'Docker Hub'
   end

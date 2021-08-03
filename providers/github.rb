@@ -9,6 +9,7 @@ class Github < Provider
   STATUS_FEED_URL = 'https://www.githubstatus.com/history.atom'
 
   def initialize
+    super
     @icon = 'github'
     @name = 'GitHub'
   end

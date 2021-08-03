@@ -18,6 +18,7 @@ class Gsuite < Provider
                           'Google Sheets'].freeze
 
   def initialize
+    super
     @icon = 'google'
     @name = 'G Suite'
   end

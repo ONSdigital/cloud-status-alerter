@@ -9,6 +9,7 @@ class Travis < Provider
   STATUS_FEED_URL = 'https://www.traviscistatus.com/history.atom'
 
   def initialize
+    super
     @icon = 'travis'
     @name = 'Travis CI'
   end

@@ -34,6 +34,7 @@ class Gcp < Provider
                           'Identity and Access Management'].freeze
 
   def initialize
+    super
     @icon = 'gcp'
     @name = 'GCP'
   end

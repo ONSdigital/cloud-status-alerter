@@ -9,6 +9,7 @@ class Notify < Provider
   STATUS_FEED_URL = 'https://status.notifications.service.gov.uk/history.atom'
 
   def initialize
+    super
     @icon = 'gov-uk'
     @name = 'GOV.UK Notify'
   end
