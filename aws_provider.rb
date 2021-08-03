@@ -8,6 +8,7 @@ class AwsProvider < Provider
   TWO_SECONDS = 2
 
   def initialize
+    super
     @icon = 'aws'
   end
 

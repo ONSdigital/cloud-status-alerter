@@ -9,6 +9,7 @@ class Trello < Provider
   STATUS_FEED_URL = 'https://trello.status.atlassian.com/history.atom'
 
   def initialize
+    super
     @icon = 'trello'
     @name = 'Trello'
   end

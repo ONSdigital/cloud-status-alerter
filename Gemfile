@@ -3,8 +3,8 @@
 source 'https://rubygems.org'
 
 gem 'feedjira'
-gem 'google-cloud-firestore'
 gem 'googleauth'
+gem 'google-cloud-firestore'
 gem 'json'
 gem 'nokogiri'
 gem 'rest-client'
