@@ -1,13 +1,17 @@
 # Cloud Status Alerter
 This repository contains a Ruby script that consumes the various service/vender status feeds and posts corresponding alerts to a specified Slack channel as events occur. A [Google Cloud Firestore](https://firebase.google.com/docs/firestore/) database is used to track a little state to ensure duplicate updates aren't posted.
 
-## Installation
-* Ensure that [Ruby](https://www.ruby-lang.org/en/downloads/) is installed
-* Install [Bundler](https://bundler.io/) using `gem install bundler`
-* Install the RubyGems this script depends on using `bundle install`
+## Organisation
+This repository contains the following sub-directories:
 
-## Running
-### Environment Variables
+* [app](https://github.com/ONSdigital/cloud-status-alerter/tree/master/app) - Ruby command-line application that runs as a Kubernetes [CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
+
+* [parent-image](https://github.com/ONSdigital/cloud-status-alerter/tree/master/parent-image) - Docker parent image containing Ruby and the dependencies required by the application. Used to speed up the Docker build
+
+## Building the Applications
+Dockerfiles are included for building both the parent image and application.
+
+## Environment Variables
 The environment variables below are required:
 
 ```
@@ -21,8 +25,6 @@ The environment variable below is optional:
 ```
 FIRESTORE_CREDENTIALS       # Path to the GCP service account JSON key (used when running locally)
 ```
-
-Run the script using `bundle exec ./cloud_status_alerter.rb`.
 
 ## Providers
 Updates from a status feed source are implemented by providers, which are simply classes within the `providers` directory that conform to these rules:
