@@ -118,7 +118,7 @@ DEPENDENCIES
   feedjira
   google-cloud-firestore
   json
-  nokogiri
+  nokogiri (>= 1.13.4)
   rest-client
   sanitize
 
