@@ -23,7 +23,7 @@ class Cloudflare < Provider
     StatusFeedUpdate.new(id: latest.entry_id.partition('/').last,
                          timestamp: latest.published.to_datetime.to_s,
                          metadata: latest.title,
-                         text: Sanitize.fragment(latest.summary, whitespace_elements: WHITESPACE_ELEMENTS),
+                         text: Sanitize.fragment(latest.content, whitespace_elements: WHITESPACE_ELEMENTS),
                          uri: latest.url)
   end
 end
