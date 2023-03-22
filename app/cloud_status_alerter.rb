@@ -5,6 +5,7 @@ require 'json'
 require 'logger'
 require 'rest-client'
 require 'google/cloud/firestore'
+require 'google/cloud/pubsub'
 
 # Class that asks providers for their status updates and posts corresponding alerts to a specified Slack channel.
 class CloudStatusAlerter
@@ -87,13 +88,21 @@ class CloudStatusAlerter
       'text': text,
       'attachments': []
     }.to_json.encode('UTF-8')
-    headers = { 'Content-Type': 'application/json', 'Authorization': "Bearer #{ENV['SLACK_BOT_TOKEN'].chomp}" }
+    headers = { 'Content-Type': 'application/json' }
+
+    pubsub = Google::Cloud::PubSub.new
+
+    topic = pubsub.topic "projects/#{ENV['MONITORING_PROJECT']}/topics/#{ENV['SLACK_PUBSUB_TOPIC']}"
+
     begin
       sleep THREE_SECONDS # Avoid Slack's rate limits.
-      RestClient.post('https://slack.com/api/chat.postMessage', payload, headers)
-      @logger.info text
-    rescue RestClient::ExceptionWithResponse => e
-      @logger.error("Error posting to Slack: HTTP #{e.response.code} #{e.response}")
+      topic.publish_async payload do |result|
+        raise "Failed to publish the message: #{result.error}" unless result.succeeded?
+        @logger.info("#{username} message published successfully: #{text}")
+      end
+
+      # Stop the async_publisher to send all queued messages immediately.
+      topic.async_publisher.stop.wait!
     end
   end
 
