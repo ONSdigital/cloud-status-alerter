@@ -98,7 +98,7 @@ class CloudStatusAlerter
       sleep THREE_SECONDS # Avoid Slack's rate limits.
       topic.publish_async payload do |result|
         raise "Failed to publish the message: #{result.error}" unless result.succeeded?
-        @logger.info("#{username} message published successfully: #{text}")
+        @logger.info("#{username} message published successfully: #{result.data}")
       end
 
       # Stop the async_publisher to send all queued messages immediately.
