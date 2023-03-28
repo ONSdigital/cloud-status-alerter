@@ -7,13 +7,13 @@ require_relative '../provider'
 class Gcp < Provider
   STATUS_FEED_URL      = 'https://status.cloud.google.com/incidents.json'
   URI_ROOT             = 'https://status.cloud.google.com/'
-  SERVICES_OF_INTEREST = ['Cloud Armor'
+  SERVICES_OF_INTEREST = ['Cloud Armor',
                           'Cloud Developer Tools',
                           'Cloud Filestore',
                           'Cloud Firestore',
                           'Cloud Key Management Service',
                           'Cloud Memorystore',
-                          'Cloud Run'
+                          'Cloud Run',
                           'Cloud Security Command Center',
                           'Cloud Spanner',
                           'Google App Engine',
@@ -35,7 +35,7 @@ class Gcp < Provider
                           'Google Compute Engine',
                           'Google Kubernetes Engine',
                           'Google Stackdriver',
-                          'Identity and Access Management'
+                          'Identity and Access Management',
                           'Secret Manager'].freeze
 
   def initialize
