@@ -38,7 +38,6 @@ class Gcp < Provider
                           'Identity and Access Management',
                           'Secret Manager'].freeze
 
-                          
   def initialize
     super
     @icon = 'gcp'
