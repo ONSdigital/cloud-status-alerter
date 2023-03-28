@@ -21,7 +21,7 @@ class Gcp < Provider
                           'Google Cloud Bigtable',
                           'Google Cloud Composer',
                           'Google Cloud Console',
-                          'Google Cloud Dataflow'
+                          'Google Cloud Dataflow',
                           'Google Cloud Datastore',
                           'Google Cloud DNS',
                           'Google Cloud Functions',
