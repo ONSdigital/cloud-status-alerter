@@ -7,17 +7,21 @@ require_relative '../provider'
 class Gcp < Provider
   STATUS_FEED_URL      = 'https://status.cloud.google.com/incidents.json'
   URI_ROOT             = 'https://status.cloud.google.com/'
-  SERVICES_OF_INTEREST = ['Cloud Developer Tools',
+  SERVICES_OF_INTEREST = ['Cloud Armor'
+                          'Cloud Developer Tools',
                           'Cloud Filestore',
                           'Cloud Firestore',
                           'Cloud Key Management Service',
                           'Cloud Memorystore',
+                          'Cloud Run'
                           'Cloud Security Command Center',
                           'Cloud Spanner',
                           'Google App Engine',
                           'Google BigQuery',
                           'Google Cloud Bigtable',
+                          'Google Cloud Composer',
                           'Google Cloud Console',
+                          'Google Cloud Dataflow'
                           'Google Cloud Datastore',
                           'Google Cloud DNS',
                           'Google Cloud Functions',
@@ -31,7 +35,8 @@ class Gcp < Provider
                           'Google Compute Engine',
                           'Google Kubernetes Engine',
                           'Google Stackdriver',
-                          'Identity and Access Management'].freeze
+                          'Identity and Access Management'
+                          'Secret Manager'].freeze
 
   def initialize
     super
