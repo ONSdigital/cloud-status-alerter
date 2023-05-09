@@ -6,7 +6,7 @@ require_relative '../provider'
 
 # Provider for Docker Hub.
 class Docker < Provider
-  STATUS_FEED_URL = 'https://status.docker.com/pages/533c6539221ae15e3f000031/rss'
+  STATUS_FEED_URL = 'https://www.dockerstatus.com/pages/533c6539221ae15e3f000031/rss'
 
   def initialize
     super
