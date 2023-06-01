@@ -16,8 +16,9 @@ The environment variables below are required:
 
 ```
 FIRESTORE_PROJECT           # Name of the GCP project containing the Firestore project
-SLACK_BOT_TOKEN             # Used for accessing the Slack API
+MONITORING_PROJECT          # Name of the GCP project containing the Cloud Pub/Sub topic to post alerts to
 STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
+SLACK_PUBSUB_TOPIC          # Name of the Cloud Pub/Sub topic to post alerts to
 ```
 
 The environment variable below is optional:
