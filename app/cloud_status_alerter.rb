@@ -28,11 +28,19 @@ class CloudStatusAlerter
   end
 
   def self.register_provider(instance)
-    LOGGER.info(JSON_LOGGER.log(level: 'INFO',
-                                message: "Registering provider #{instance.name}",
-                                module_name: "cloud_status_alerter"))
+    disabled_providers = ENV['DISABLED_PROVIDERS']&.split(',') || []
 
-    providers << instance
+    if disabled_providers.include?(instance.name)
+      LOGGER.info(JSON_LOGGER.log(level: 'INFO',
+                                  message: "Skipping registration of disabled provider #{instance.name}",
+                                  module_name: "cloud_status_alerter"))
+    else
+      LOGGER.info(JSON_LOGGER.log(level: 'INFO',
+                                  message: "Registering provider #{instance.name}",
+                                  module_name: "cloud_status_alerter"))
+
+      providers << instance
+    end
   end
 
   def initialize
