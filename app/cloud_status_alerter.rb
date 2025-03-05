@@ -8,6 +8,8 @@ require 'rest-client'
 require 'google/cloud/firestore'
 require 'google/cloud/pubsub'
 
+require_relative 'message_formatter'
+
 # Class that asks providers for their status updates and posts corresponding alerts to a specified Slack channel.
 class CloudStatusAlerter
   DATE_TIME_FORMAT     = '%A %d %b %Y %H:%M:%S UTC'
@@ -17,6 +19,9 @@ class CloudStatusAlerter
   ERROR_LOGGER = Logger.new($stderr)
   LOGGER       = Logger.new($stdout)
   JSON_LOGGER  = JSONLogger.new(application: 'cloud-status-alerter', environment: 'development')
+
+  ERROR_LOGGER.formatter = MessageFormatter.new
+  LOGGER.formatter       = MessageFormatter.new
 
   def self.providers
     @providers ||= []
