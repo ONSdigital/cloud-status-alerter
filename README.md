@@ -16,6 +16,7 @@ The environment variables below are required:
 
 | Variable                      | Purpose                                                                         |
 |-------------------------------|---------------------------------------------------------------------------------|
+| `DISABLED_PROVIDERS `         | Comma-separated list of provider names that should not be loaded.               |
 | `ENVIRONMENT`                 | Name of the environment i.e. development or production.                         |
 | `FIRESTORE_PROJECT`           | Name of the Google Cloud project containing the Firestore project               |
 | `MONITORING_PROJECT`          | Name of the Google Cloud project containing the Pub/Sub topic to post alerts to |
