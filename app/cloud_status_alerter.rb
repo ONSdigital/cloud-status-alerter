@@ -8,7 +8,7 @@ require 'rest-client'
 require 'google/cloud/firestore'
 require 'google/cloud/pubsub'
 
-require_relative 'message_formatter'
+require_relative 'lib/message_formatter'
 
 # Class that asks providers for their status updates and posts corresponding alerts to a specified Slack channel.
 class CloudStatusAlerter

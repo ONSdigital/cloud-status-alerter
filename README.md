@@ -14,18 +14,13 @@ Dockerfiles are included for building both the parent image and application.
 ## Environment Variables
 The environment variables below are required:
 
-```
-FIRESTORE_PROJECT           # Name of the GCP project containing the Firestore project
-MONITORING_PROJECT          # Name of the GCP project containing the Cloud Pub/Sub topic to post alerts to
-SLACK_PUBSUB_TOPIC          # Name of the Cloud Pub/Sub topic to post alerts to
-STATUS_ALERTS_SLACK_CHANNEL # Name of the Slack channel to post alerts to
-```
-
-The environment variable below is optional:
-
-```
-FIRESTORE_CREDENTIALS       # Path to the GCP service account JSON key (used when running locally)
-```
+| Variable                      | Purpose                                                                         |
+|-------------------------------|---------------------------------------------------------------------------------|
+| `ENVIRONMENT`                 | Name of the environment i.e. development or production.                         |
+| `FIRESTORE_PROJECT`           | Name of the Google Cloud project containing the Firestore project               |
+| `MONITORING_PROJECT`          | Name of the Google Cloud project containing the Pub/Sub topic to post alerts to |
+| `SLACK_PUBSUB_TOPIC`          | Name of the Pub/Sub topic to post alerts to                                     |
+| `STATUS_ALERTS_SLACK_CHANNEL` | Name of the Slack channel to post alerts to                                     |
 
 ## Providers
 Updates from a status feed source are implemented by providers, which are simply classes within the `providers` directory that conform to these rules:
