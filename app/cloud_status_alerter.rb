@@ -3,6 +3,7 @@
 
 require 'json'
 require 'logger'
+require 'ons-json-logger'
 require 'rest-client'
 require 'google/cloud/firestore'
 require 'google/cloud/pubsub'
@@ -13,21 +14,32 @@ class CloudStatusAlerter
   FIRESTORE_COLLECTION = 'cloud-status-alerter-updates'
   THREE_SECONDS        = 3
 
+  ERROR_LOGGER = Logger.new($stderr)
+  LOGGER       = Logger.new($stdout)
+  JSON_LOGGER  = JSONLogger.new(application: 'cloud-status-alerter', environment: 'development')
+
   def self.providers
     @providers ||= []
   end
 
   def self.register_provider(instance)
+    LOGGER.info(JSON_LOGGER.log(level: 'INFO',
+                                message: "Registering provider #{instance.name}",
+                                module_name: "cloud_status_alerter"))
+
     providers << instance
   end
 
   def initialize
-    @logger = Logger.new($stdout)
     initialize_firestore_client
     load_providers
   end
 
   def load_providers
+    LOGGER.info(JSON_LOGGER.log(level: 'INFO',
+                                message: "Loading providers",
+                                module_name: "cloud_status_alerter"))
+
     Dir['./providers/*.rb'].each do |file|
       require_relative file
       klass = self.class.const_get(File.basename(file).gsub('.rb', '').split('_').map(&:capitalize).join).to_s
@@ -38,6 +50,11 @@ class CloudStatusAlerter
   def run
     self.class.providers.each do |provider|
       update = provider.latest_update
+
+      LOGGER.info(JSON_LOGGER.log(level: 'INFO',
+                                  message: "#{provider.name} has update #{update}",
+                                  module_name: "cloud_status_alerter"))
+
       next if update.nil?
 
       post_slack_message(provider.icon, provider.name, update) unless in_firestore?(provider, update)
@@ -96,9 +113,20 @@ class CloudStatusAlerter
 
     begin
       sleep THREE_SECONDS # Avoid Slack's rate limits.
+
       topic.publish_async payload do |result|
-        raise "Failed to publish the message: #{result.error}" unless result.succeeded?
-        @logger.info("#{username} message published successfully: #{result.data}")
+        unless result.succeeded?
+          ERROR_LOGGER.error(JSON_LOGGER.log(level: 'ERROR',
+                                             message: "#{username} unable to publish message to Slack: #{result.error}",
+                                             module_name: "cloud_status_alerter"))
+
+          raise "Failed to publish the message: #{result.error}" unless result.succeeded?
+        end
+        
+
+        LOGGER.info(JSON_LOGGER.log(level: 'INFO',
+                                    message: "#{username} message published to Slack successfully: #{result.data}",
+                                    module_name: "cloud_status_alerter"))
       end
 
       # Stop the async_publisher to send all queued messages immediately.
