@@ -39,5 +39,7 @@ Updates from a status feed source are implemented by providers, which are simply
 | text      | Status update text                                                                     |
 | uri       | URI for viewing this individual status update online                                   |
 
+Providers can be disabled i.e. not loaded by adding their name to the `DISABLED_PROVIDERS` list.
+
 ## Copyright
 Copyright (C) 2019&ndash;2022 Crown Copyright (Office for National Statistics)
