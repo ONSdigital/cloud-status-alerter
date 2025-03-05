@@ -1,0 +1,8 @@
+.git
+.gitignore
+.rubocop.yml
+.ruby-version
+Dockerfile
+LICENSE
+README.md
+update-rubygems.sh
