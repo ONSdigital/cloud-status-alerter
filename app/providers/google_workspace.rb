@@ -7,8 +7,8 @@ require 'securerandom'
 require_relative '../provider'
 
 # Provider for G Suite.
-class Gsuite < Provider
-  STATUS_FEED_URL = 'https://www.google.co.uk/appsstatus/rss/en'
+class GoogleWorkspace < Provider
+  STATUS_FEED_URL = 'https://www.google.com/appsstatus/dashboard/en/feed.atom'
   SERVICES_OF_INTEREST = ['Admin console',
                           'Google Analytics',
                           'Google Docs',
@@ -20,7 +20,7 @@ class Gsuite < Provider
   def initialize
     super
     @icon = 'google'
-    @name = 'G Suite'
+    @name = 'Google Workspace'
   end
 
   def latest_update
